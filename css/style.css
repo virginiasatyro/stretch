@@ -6,7 +6,7 @@
   --muted: #667267;
   --line: #dce2d8;
   --accent: #216b4c;
-  --accent-strong: #164b35;
+  --accent-strong: #292626;
   --danger: #8a3b2f;
   --shadow: 0 10px 24px rgba(25, 35, 29, 0.08);
 }
@@ -139,6 +139,22 @@ h2 {
   border-color: var(--accent);
   background: var(--accent);
   color: #ffffff;
+}
+
+.save-a {
+  border-color: #c94444;
+  background: #c94444;
+}
+
+.save-b {
+  border-color: #3577c9;
+  background: #3577c9;
+}
+
+.save-c {
+  border-color: #d9b32f;
+  background: #f0c735;
+  color: #2b2400;
 }
 
 .workout-title {

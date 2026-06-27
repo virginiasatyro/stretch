@@ -72,7 +72,7 @@ const UI = (() => {
       form.className = "weight-form";
       form.innerHTML = `
         <input class="weight-input" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Novo peso">
-        <button class="save-button" type="submit">Salvar</button>
+        <button class="save-button save-${dayId.toLowerCase()}" type="submit">Salvar</button>
       `;
 
       form.addEventListener("submit", (event) => {
