@@ -1,229 +1,179 @@
 const UI = (() => {
-  let timers = {};
-
   function render(state, actions) {
-    const activeWorkout = Workouts.getActive(state.workouts);
-    document.getElementById("active-workout-name").textContent = activeWorkout.name;
-
-    renderTabs(activeWorkout, state.selectedDayId, actions);
-    renderCurrentDay(activeWorkout, state.selectedDayId, actions);
-    renderOldWorkouts(Workouts.getOld(state.workouts));
+    toggleViews(state.view);
+    renderStats(state.history);
+    renderRoutines(state.routines, actions);
+    renderSettings(state.settings, actions);
+    renderBuilder(state.builderExercises, actions);
+    renderPlayer(state, actions);
   }
 
-  function renderTabs(activeWorkout, selectedDayId, actions) {
-    const tabs = document.getElementById("day-tabs");
-    tabs.innerHTML = "";
+  function toggleViews(view) {
+    document.getElementById("home-view").classList.toggle("is-hidden", view !== "home");
+    document.getElementById("builder-view").classList.toggle("is-hidden", view !== "builder");
+    document.getElementById("player-view").classList.toggle("is-hidden", view !== "player");
+  }
 
-    activeWorkout.workouts.forEach((day) => {
-      const button = document.createElement("button");
-      button.className = `day-tab day-${day.id.toLowerCase()}${day.id === selectedDayId ? " is-active" : ""}`;
-      button.type = "button";
-      button.textContent = day.id;
-      button.setAttribute("aria-label", day.name);
-      button.addEventListener("click", () => actions.selectDay(day.id));
-      tabs.appendChild(button);
+  function renderStats(history) {
+    const stats = Routines.getStats(history);
+    const container = document.getElementById("stats");
+    container.innerHTML = `
+      <article><span>Completed Today</span><strong>${stats.completedToday}</strong></article>
+      <article><span>This Week</span><strong>${stats.completedThisWeek}</strong></article>
+      <article><span>Total Minutes</span><strong>${stats.totalMinutes}</strong></article>
+      <article><span>Most Used</span><strong>${escapeHtml(stats.mostUsedRoutine)}</strong></article>
+    `;
+  }
+
+  function renderRoutines(routines, actions) {
+    const container = document.getElementById("routine-list");
+    container.innerHTML = "";
+
+    routines.forEach((routine) => {
+      const duration = Routines.getRoutineDuration(routine);
+      const card = document.createElement("article");
+      card.className = "routine-card";
+      card.style.setProperty("--routine-color", routine.color);
+      card.innerHTML = `
+        <div class="routine-mark">${escapeHtml(routine.icon)}</div>
+        <div>
+          <h3>${escapeHtml(routine.name)}</h3>
+          <p>${routine.exercises.length} exercises &middot; ${Routines.formatDuration(duration)}</p>
+        </div>
+        <button class="primary-button" type="button">Start</button>
+      `;
+      card.querySelector("button").addEventListener("click", () => actions.startRoutine(routine.id));
+      container.appendChild(card);
     });
   }
 
-  function renderCurrentDay(activeWorkout, selectedDayId, actions) {
-    const container = document.getElementById("current-day");
-    const day = Workouts.findDay(activeWorkout, selectedDayId);
+  function renderSettings(settings, actions) {
+    const container = document.getElementById("settings-list");
+    const options = [
+      ["sound", "Sound"],
+      ["vibration", "Vibration"],
+      ["countdown", "Countdown 3...2...1"],
+      ["autoplay", "Autoplay"],
+      ["keepAwake", "Keep Screen Awake"]
+    ];
 
     container.innerHTML = "";
 
-    const title = document.createElement("h2");
-    title.className = "workout-title";
-    title.textContent = day.name;
-    container.appendChild(title);
-
-    const list = document.createElement("div");
-    list.className = "exercise-list";
-
-    day.exercises.forEach((exercise) => {
-      list.appendChild(renderExercise(activeWorkout.id, day.id, exercise, false, actions));
+    options.forEach(([key, label]) => {
+      const item = document.createElement("label");
+      item.className = "setting-toggle";
+      item.innerHTML = `
+        <span>${label}</span>
+        <input type="checkbox"${settings[key] ? " checked" : ""}>
+      `;
+      item.querySelector("input").addEventListener("change", (event) => {
+        actions.updateSetting(key, event.target.checked);
+      });
+      container.appendChild(item);
     });
-
-    container.appendChild(list);
   }
 
-  function renderExercise(workoutId, dayId, exercise, readonly, actions) {
-    const card = document.createElement("article");
-    card.className = "exercise-card";
+  function renderBuilder(exercises, actions) {
+    const container = document.getElementById("builder-exercises");
+    container.innerHTML = "";
 
-    const lastWeight = Workouts.getLastWeight(exercise);
-    const historyId = `history-${workoutId}-${dayId}-${exercise.id}`;
-    const timerId = `timer-${workoutId}-${dayId}-${exercise.id}`;
-
-    card.innerHTML = `
-      <div class="exercise-header">
-        <div>
-          <h3 class="exercise-title">${escapeHtml(exercise.name)}</h3>
-          <p class="exercise-meta">${exercise.sets}x${escapeHtml(exercise.reps)} · Descanso: ${exercise.rest} s</p>
-        </div>
-        <div class="last-weight">
-          <span>Ultimo peso</span>
-          <strong>${lastWeight === null ? "-" : `${lastWeight} kg`}</strong>
-        </div>
-      </div>
-    `;
-
-    if (!readonly) {
-      const form = document.createElement("form");
-      form.className = "weight-form";
-      form.innerHTML = `
-        <input class="weight-input" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Novo peso">
-        <button class="save-button save-${dayId.toLowerCase()}" type="submit">Salvar</button>
+    exercises.forEach((exercise, index) => {
+      const item = document.createElement("article");
+      item.className = "builder-exercise";
+      item.draggable = true;
+      item.dataset.index = String(index);
+      item.innerHTML = `
+        <button class="drag-handle" type="button" aria-label="Reordenar" title="Reordenar">&#9776;</button>
+        <label>
+          <span>Name</span>
+          <input type="text" value="${escapeAttribute(exercise.name)}" placeholder="Hamstring Stretch" data-field="name">
+        </label>
+        <label>
+          <span>Duration</span>
+          <input type="number" min="5" step="5" value="${exercise.duration}" data-field="duration">
+        </label>
+        <label>
+          <span>Repeat</span>
+          <select data-field="repeat">
+            <option value="both"${exercise.repeat === "both" ? " selected" : ""}>Both</option>
+            <option value="bothSides"${exercise.repeat === "bothSides" ? " selected" : ""}>Left/Right</option>
+          </select>
+        </label>
+        <label class="notes-field">
+          <span>Notes</span>
+          <input type="text" value="${escapeAttribute(exercise.notes || "")}" placeholder="Optional" data-field="notes">
+        </label>
+        <button class="icon-button danger" type="button" aria-label="Remover" title="Remover" data-remove>&times;</button>
       `;
 
-      form.addEventListener("submit", (event) => {
+      item.querySelectorAll("[data-field]").forEach((field) => {
+        field.addEventListener("input", () => actions.updateBuilderExercise(index, field.dataset.field, field.value));
+      });
+      item.querySelector("[data-remove]").addEventListener("click", () => actions.removeBuilderExercise(index));
+      item.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text/plain", String(index));
+      });
+      item.addEventListener("dragover", (event) => event.preventDefault());
+      item.addEventListener("drop", (event) => {
         event.preventDefault();
-        const input = form.querySelector("input");
-        const value = Number(input.value);
-
-        if (!Number.isFinite(value) || value <= 0) {
-          input.focus();
-          return;
-        }
-
-        actions.saveWeight(workoutId, dayId, exercise.id, value);
+        const from = Number(event.dataTransfer.getData("text/plain"));
+        actions.moveBuilderExercise(from, index);
       });
 
-      card.appendChild(form);
-    } else {
-      const note = document.createElement("p");
-      note.className = "readonly-note";
-      note.textContent = "Somente visualizacao.";
-      card.appendChild(note);
-    }
-
-    const actionsRow = document.createElement("div");
-    actionsRow.className = "exercise-actions";
-
-    const historyButton = document.createElement("button");
-    historyButton.className = "history-button";
-    historyButton.type = "button";
-    historyButton.textContent = "Historico";
-    historyButton.addEventListener("click", () => {
-      document.getElementById(historyId).classList.toggle("is-open");
+      container.appendChild(item);
     });
-    actionsRow.appendChild(historyButton);
-
-    // Descanso pausado por enquanto.
-    // if (!readonly) {
-    //   const timerButton = document.createElement("button");
-    //   timerButton.className = "timer-button";
-    //   timerButton.type = "button";
-    //   timerButton.textContent = "Iniciar descanso";
-    //   timerButton.addEventListener("click", () => startTimer(timerId, exercise.rest));
-    //   actionsRow.appendChild(timerButton);
-    // }
-
-    card.appendChild(actionsRow);
-
-    // const timerStatus = document.createElement("p");
-    // timerStatus.className = "timer-status";
-    // timerStatus.id = timerId;
-    // card.appendChild(timerStatus);
-
-    const history = document.createElement("div");
-    history.className = "history";
-    history.id = historyId;
-    history.appendChild(renderHistory(exercise.history));
-    card.appendChild(history);
-
-    return card;
   }
 
-  function renderHistory(history) {
-    if (!history.length) {
-      const empty = document.createElement("p");
-      empty.className = "empty-state";
-      empty.textContent = "Nenhum peso registrado.";
-      return empty;
-    }
-
-    const list = document.createElement("ul");
-    list.className = "history-list";
-
-    history.forEach((entry) => {
-      const item = document.createElement("li");
-      item.innerHTML = `<span>${Workouts.formatDate(entry.date)}</span><strong>${entry.weight} kg</strong>`;
-      list.appendChild(item);
-    });
-
-    return list;
-  }
-
-  function renderOldWorkouts(oldWorkouts) {
-    const container = document.getElementById("old-workouts");
-    container.innerHTML = "";
-
-    if (!oldWorkouts.length) {
-      const empty = document.createElement("p");
-      empty.className = "empty-state";
-      empty.textContent = "Nenhum treino antigo cadastrado.";
-      container.appendChild(empty);
+  function renderPlayer(state, actions) {
+    const container = document.getElementById("player");
+    if (state.view !== "player") {
+      container.innerHTML = "";
       return;
     }
 
-    oldWorkouts.forEach((workout) => {
-      const panel = document.createElement("article");
-      panel.className = "old-workout-panel";
+    const routine = Routines.find(state.routines, state.player.routineId);
+    const steps = Routines.expandSteps(routine);
+    const step = steps[state.player.stepIndex];
 
-      const contentId = `old-${workout.id}`;
-      const button = document.createElement("button");
-      button.className = "old-button";
-      button.type = "button";
-      button.innerHTML = `<span>${escapeHtml(workout.name)}</span><span>Ver</span>`;
-      button.addEventListener("click", () => {
-        document.getElementById(contentId).classList.toggle("is-open");
-      });
+    if (!routine || !step) {
+      container.innerHTML = "";
+      return;
+    }
 
-      const content = document.createElement("div");
-      content.className = "old-content";
-      content.id = contentId;
+    const progress = step.duration > 0 ? ((step.duration - state.player.remaining) / step.duration) * 100 : 0;
+    const totalProgress = steps.length > 1 ? (state.player.stepIndex / (steps.length - 1)) * 100 : 100;
+    const next = steps[state.player.stepIndex + 1];
 
-      workout.workouts.forEach((day) => {
-        const dayBlock = document.createElement("section");
-        dayBlock.className = "old-day";
-        dayBlock.innerHTML = `<h3>${escapeHtml(day.name)}</h3>`;
+    container.innerHTML = `
+      <div class="player-top">
+        <button class="ghost-button" type="button" data-action="backHome">Close</button>
+        <span>Exercise ${state.player.stepIndex + 1} / ${steps.length}</span>
+      </div>
+      <article class="player-panel" style="--routine-color: ${routine.color}">
+        <div class="player-routine">${escapeHtml(routine.name)}</div>
+        <h2>${escapeHtml(step.name)}</h2>
+        <div class="side-label">${formatSide(step.side)}</div>
+        <div class="timer-display">${Routines.formatClock(state.player.remaining)}</div>
+        <div class="progress-bar" aria-label="Exercise progress"><span style="width: ${progress}%"></span></div>
+        <div class="progress-bar routine-progress" aria-label="Routine progress"><span style="width: ${totalProgress}%"></span></div>
+        <p class="next-label">Next: ${next ? `${escapeHtml(next.name)} &middot; ${formatSide(next.side)}` : "Finish"}</p>
+        <div class="player-actions">
+          <button class="ghost-button" type="button" data-action="previousStep">Previous</button>
+          <button class="primary-button" type="button" data-action="togglePlayer">${state.player.running ? "Pause" : "Start"}</button>
+          <button class="ghost-button" type="button" data-action="nextStep">Next</button>
+        </div>
+      </article>
+    `;
 
-        day.exercises.forEach((exercise) => {
-          const item = document.createElement("div");
-          item.className = "old-exercise";
-          item.appendChild(renderExercise(workout.id, day.id, exercise, true, {}));
-          dayBlock.appendChild(item);
-        });
-
-        content.appendChild(dayBlock);
-      });
-
-      panel.appendChild(button);
-      panel.appendChild(content);
-      container.appendChild(panel);
+    container.querySelectorAll("[data-action]").forEach((button) => {
+      button.addEventListener("click", () => actions[button.dataset.action]());
     });
   }
 
-  function startTimer(timerId, seconds) {
-    const element = document.getElementById(timerId);
-    if (!element) return;
-
-    clearInterval(timers[timerId]);
-
-    let remaining = seconds;
-    element.textContent = `${remaining} s`;
-
-    timers[timerId] = setInterval(() => {
-      remaining -= 1;
-
-      if (remaining <= 0) {
-        clearInterval(timers[timerId]);
-        element.textContent = "Descanso finalizado!";
-        return;
-      }
-
-      element.textContent = `${remaining} s`;
-    }, 1000);
+  function formatSide(side) {
+    if (side === "left") return "LEFT";
+    if (side === "right") return "RIGHT";
+    return "BOTH";
   }
 
   function escapeHtml(value) {
@@ -233,6 +183,10 @@ const UI = (() => {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function escapeAttribute(value) {
+    return escapeHtml(value).replaceAll("`", "&#096;");
   }
 
   return {

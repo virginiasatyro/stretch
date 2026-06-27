@@ -1,363 +1,77 @@
-window.DEFAULT_WORKOUTS_VERSION = 20260627;
-window.DEFAULT_WORKOUTS = [
+window.DEFAULT_ROUTINES_VERSION = 2026062702;
+window.DEFAULT_ROUTINES = [
   {
-    id: 1,
-    name: "Treino Junho-Julho 2026",
-    active: true,
-    workouts: [
-      {
-        id: "A",
-        name: "Treino A",
-        exercises: [
-          {
-            id: 1,
-            name: "Supino Reto com Halteres",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 10 }
-            ]
-          },
-          {
-            id: 2,
-            name: "Supino Inclinado com Halteres",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 10 }
-            ]
-          },
-          {
-            id: 3,
-            name: "Tríceps na Polia com Barra Reta",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 34 }
-            ]
-          },
-          {
-            id: 4,
-            name: "Tríceps Francês na Polia com Corda",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 22 }
-            ]
-          },
-          {
-            id: 5,
-            name: "Desenvolvimento Arnold Sentado",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 7 }
-            ]
-          },
-          {
-            id: 6,
-            name: "Elevação Frontal com Halteres",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 6 }
-            ]
-          },
-          {
-            id: 7,
-            name: "Afundo com Step",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 10 }
-            ]
-          },
-          {
-            id: 8,
-            name: "Cadeira Extensora",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-22", weight: 79 }
-            ]
-          }
-        ]
-      },
-      {
-        id: "B",
-        name: "Treino B",
-        exercises: [
-          {
-            id: 9,
-            name: "Puxada Aberta Barra Reta",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 40 }
-            ]
-          },
-          {
-            id: 10,
-            name: "Crucifixo Inverso Sentado",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 6 }
-            ]
-          },
-          {
-            id: 11,
-            name: "Rosca Zottman",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 6 }
-            ]
-          },
-          {
-            id: 12,
-            name: "Rosca Concentrada",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 6 }
-            ]
-          },
-          {
-            id: 13,
-            name: "Elevação Lateral com Halteres",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 7 }
-            ]
-          },
-          {
-            id: 14,
-            name: "Encolhimento de Ombros com Barra Reta",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 7.5 }
-            ]
-          },
-          {
-            id: 15,
-            name: "Bom Dia",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 5 }
-            ]
-          },
-          {
-            id: 16,
-            name: "Cadeira Flexora",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: [
-              { date: "2026-06-24", weight: 64 }
-            ]
-          }
-        ]
-      },
-      {
-        id: "C",
-        name: "Treino C",
-        exercises: [
-          {
-            id: 17,
-            name: "Agachamento Livre com Barra no Suporte",
-            sets: 3,
-            reps: "8",
-            rest: 90,
-            history: []
-          },
-          {
-            id: 18,
-            name: "Agachamento com Barra Hexagonal",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: []
-          },
-          {
-            id: 19,
-            name: "Leg Press 45°",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: []
-          },
-          {
-            id: 20,
-            name: "Crucifixo Máquina",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: []
-          },
-          {
-            id: 21,
-            name: "Pegada Neutra Triângulo",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: []
-          },
-          {
-            id: 22,
-            name: "Adução de Quadril Máquina",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: []
-          },
-          {
-            id: 23,
-            name: "Abdução de Quadril Máquina",
-            sets: 3,
-            reps: "8",
-            rest: 60,
-            history: []
-          },
-          {
-            id: 24,
-            name: "100 Abdominais",
-            sets: 3,
-            reps: "100",
-            rest: 60,
-            history: []
-          }
-        ]
-      }
+    id: "upper-body-warmup",
+    name: "Upper Body Warm-up",
+    icon: "UB",
+    color: "#2f7d68",
+    exercises: [
+      { id: "neck-rolls", name: "Neck Rolls", duration: 20, repeat: "both" },
+      { id: "shoulder-circles", name: "Shoulder Circles", duration: 30, repeat: "both" },
+      { id: "arm-swings", name: "Arm Swings", duration: 30, repeat: "both" },
+      { id: "triceps-stretch", name: "Triceps Stretch", duration: 25, repeat: "bothSides" },
+      { id: "wrist-flexor", name: "Wrist Flexor Stretch", duration: 20, repeat: "bothSides" }
     ]
   },
   {
-    id: 2,
-    name: "Treino Marco 2026",
-    active: false,
-    workouts: [
-      {
-        id: "A",
-        name: "Treino A",
-        exercises: [
-          {
-            id: 1,
-            name: "Supino",
-            sets: 4,
-            reps: "10",
-            rest: 90,
-            history: [
-              { date: "2026-03-12", weight: 36 },
-              { date: "2026-03-19", weight: 38 }
-            ]
-          }
-        ]
-      },
-      {
-        id: "B",
-        name: "Treino B",
-        exercises: [
-          {
-            id: 2,
-            name: "Agachamento",
-            sets: 4,
-            reps: "8",
-            rest: 120,
-            history: [
-              { date: "2026-03-13", weight: 55 }
-            ]
-          }
-        ]
-      },
-      {
-        id: "C",
-        name: "Treino C",
-        exercises: [
-          {
-            id: 3,
-            name: "Puxada Frontal",
-            sets: 4,
-            reps: "10",
-            rest: 90,
-            history: [
-              { date: "2026-03-14", weight: 45 }
-            ]
-          }
-        ]
-      }
+    id: "lower-body-warmup",
+    name: "Lower Body Warm-up",
+    icon: "LB",
+    color: "#bf5f42",
+    exercises: [
+      { id: "hip-circles", name: "Hip Circles", duration: 30, repeat: "both" },
+      { id: "leg-swings", name: "Leg Swings", duration: 25, repeat: "bothSides" },
+      { id: "walking-lunge", name: "Walking Lunge", duration: 40, repeat: "both" },
+      { id: "ankle-rocks", name: "Ankle Rocks", duration: 20, repeat: "bothSides" }
     ]
   },
   {
-    id: 3,
-    name: "Treino Novembro 2025",
-    active: false,
-    workouts: [
-      {
-        id: "A",
-        name: "Treino A",
-        exercises: [
-          {
-            id: 1,
-            name: "Supino Inclinado",
-            sets: 3,
-            reps: "12",
-            rest: 75,
-            history: [
-              { date: "2025-11-08", weight: 28 }
-            ]
-          }
-        ]
-      },
-      {
-        id: "B",
-        name: "Treino B",
-        exercises: [
-          {
-            id: 2,
-            name: "Cadeira Extensora",
-            sets: 3,
-            reps: "12",
-            rest: 60,
-            history: [
-              { date: "2025-11-10", weight: 45 }
-            ]
-          }
-        ]
-      },
-      {
-        id: "C",
-        name: "Treino C",
-        exercises: [
-          {
-            id: 3,
-            name: "Remada Curvada",
-            sets: 3,
-            reps: "10",
-            rest: 90,
-            history: [
-              { date: "2025-11-12", weight: 35 }
-            ]
-          }
-        ]
-      }
+    id: "running-warmup",
+    name: "Running Warm-up",
+    icon: "RW",
+    color: "#316fba",
+    exercises: [
+      { id: "marching", name: "High Knee March", duration: 30, repeat: "both" },
+      { id: "butt-kicks", name: "Butt Kicks", duration: 30, repeat: "both" },
+      { id: "calf-raises", name: "Calf Raises", duration: 30, repeat: "both" },
+      { id: "dynamic-hamstring", name: "Dynamic Hamstring Stretch", duration: 25, repeat: "bothSides" }
+    ]
+  },
+  {
+    id: "post-run-recovery",
+    name: "Post Run Recovery",
+    icon: "PR",
+    color: "#6f5aa8",
+    exercises: [
+      { id: "quad-stretch", name: "Quad Stretch", duration: 35, repeat: "bothSides" },
+      { id: "calf-wall", name: "Calf Wall Stretch", duration: 35, repeat: "bothSides" },
+      { id: "figure-four", name: "Figure Four Stretch", duration: 40, repeat: "bothSides" },
+      { id: "child-pose", name: "Child Pose", duration: 45, repeat: "both" }
+    ]
+  },
+  {
+    id: "kickboxing-legs",
+    name: "Kickboxing Legs",
+    icon: "KB",
+    color: "#c43d4b",
+    exercises: [
+      { id: "hamstring", name: "Hamstring Stretch", duration: 30, repeat: "bothSides" },
+      { id: "hip-flexor", name: "Hip Flexor Stretch", duration: 30, repeat: "bothSides" },
+      { id: "butterfly", name: "Butterfly Stretch", duration: 45, repeat: "both" },
+      { id: "pancake", name: "Pancake Stretch", duration: 45, repeat: "both" },
+      { id: "shin-box", name: "Shin Box Switch", duration: 30, repeat: "both" }
+    ]
+  },
+  {
+    id: "morning-stretch",
+    name: "Morning Stretch",
+    icon: "AM",
+    color: "#d0922f",
+    exercises: [
+      { id: "cat-cow", name: "Cat Cow", duration: 40, repeat: "both" },
+      { id: "world-greatest", name: "World's Greatest Stretch", duration: 30, repeat: "bothSides" },
+      { id: "forward-fold", name: "Forward Fold", duration: 45, repeat: "both" },
+      { id: "deep-squat", name: "Deep Squat Hold", duration: 45, repeat: "both" }
     ]
   }
 ];

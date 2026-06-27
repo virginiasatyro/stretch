@@ -3,31 +3,77 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gym Tracker</title>
+    <title>Stretch Tracker</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
     <header class="app-header">
       <div class="header-content">
         <div>
-          <p class="eyebrow">Treino Atual</p>
-          <h1 id="active-workout-name">Gym Tracker</h1>
+          <p class="eyebrow">Routine Player</p>
+          <h1>Stretch Tracker</h1>
         </div>
-        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Alternar tema">
-          Escuro
-        </button>
+        <button id="theme-toggle" class="theme-toggle" type="button">Theme</button>
       </div>
     </header>
 
     <main class="app-shell">
-      <section class="current-section" aria-labelledby="active-workout-name">
-        <nav id="day-tabs" class="day-tabs" aria-label="Dias do treino"></nav>
-        <div id="current-day" class="workout-day"></div>
+      <section id="home-view" class="view" aria-labelledby="routines-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow dark">Categorias</p>
+            <h2 id="routines-title">Rotinas</h2>
+          </div>
+          <button id="create-routine-button" class="primary-button" type="button">+ Create Routine</button>
+        </div>
+        <div id="stats" class="stats-grid"></div>
+        <div id="routine-list" class="routine-grid"></div>
+        <div class="settings-panel" aria-labelledby="settings-title">
+          <h2 id="settings-title">Settings</h2>
+          <div id="settings-list" class="settings-list"></div>
+        </div>
       </section>
 
-      <section class="old-section" aria-labelledby="old-workouts-title">
-        <h2 id="old-workouts-title">Treinos Antigos</h2>
-        <div id="old-workouts" class="old-workouts"></div>
+      <section id="builder-view" class="view is-hidden" aria-labelledby="builder-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow dark">Custom</p>
+            <h2 id="builder-title">Create Routine</h2>
+          </div>
+          <button class="ghost-button" type="button" data-action="cancel-builder">Cancel</button>
+        </div>
+
+        <form id="routine-form" class="builder-form">
+          <label>
+            <span>Routine Name</span>
+            <input id="routine-name" type="text" required placeholder="Kickboxing Legs">
+          </label>
+
+          <div class="builder-row">
+            <label>
+              <span>Icon</span>
+              <input id="routine-icon" type="text" maxlength="3" placeholder="KB">
+            </label>
+            <label>
+              <span>Color</span>
+              <input id="routine-color" type="color" value="#2f7d68">
+            </label>
+          </div>
+
+          <div class="exercise-builder">
+            <div class="section-heading compact">
+              <h3>Exercises</h3>
+              <button id="add-exercise-button" class="ghost-button" type="button">+ Add Exercise</button>
+            </div>
+            <div id="builder-exercises" class="builder-exercises"></div>
+          </div>
+
+          <button class="primary-button wide" type="submit">Save Routine</button>
+        </form>
+      </section>
+
+      <section id="player-view" class="view is-hidden" aria-live="polite">
+        <div id="player"></div>
       </section>
     </main>
 

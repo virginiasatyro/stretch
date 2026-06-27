@@ -1,18 +1,20 @@
-# Gym Tracker
+# Stretch Tracker
 
-Aplicacao web simples para acompanhar treinos de academia.
+Aplicacao web simples para executar rotinas de alongamento e aquecimento.
 
-## Recursos da primeira versao
+## Recursos
 
-- Funciona offline.
-- Publicavel no GitHub Pages.
-- Salva treinos e pesos no LocalStorage.
-- Mostra o treino atual com dias A, B e C.
-- Lista treinos antigos em modo somente leitura.
-- Registra peso por exercicio.
-- Exibe ultimo peso e historico.
-- Mostra tempo de descanso e cronometro simples por exercicio.
+- Funciona offline e pode ser publicada no GitHub Pages.
+- Lista rotinas por categoria.
+- Executa uma sequencia com timer por exercicio.
+- Expande automaticamente exercicios `Left/Right`.
+- Avanca para o proximo passo ao terminar o tempo.
+- Toca um beep no fim da etapa e no countdown final.
+- Salva conclusoes no LocalStorage.
+- Mostra Completed Today, This Week, Total Minutes e Most Used Routine.
+- Permite criar rotinas customizadas e arrastar exercicios para reordenar.
+- Inclui tema claro/escuro.
 
 ## Como usar
 
-Abra o arquivo `index.html` no navegador ou publique o repositorio no GitHub Pages.
+Abra `index.html` no navegador ou publique o repositorio no GitHub Pages.
