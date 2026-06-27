@@ -35,7 +35,7 @@ input {
   padding: 28px 18px 22px;
 }
 
-.app-header > div,
+.app-header>div,
 .app-shell {
   width: min(920px, 100%);
   margin: 0 auto;

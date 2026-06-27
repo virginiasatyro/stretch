@@ -108,21 +108,22 @@ const UI = (() => {
     });
     actionsRow.appendChild(historyButton);
 
-    if (!readonly) {
-      const timerButton = document.createElement("button");
-      timerButton.className = "timer-button";
-      timerButton.type = "button";
-      timerButton.textContent = "Iniciar descanso";
-      timerButton.addEventListener("click", () => startTimer(timerId, exercise.rest));
-      actionsRow.appendChild(timerButton);
-    }
+    // Descanso pausado por enquanto.
+    // if (!readonly) {
+    //   const timerButton = document.createElement("button");
+    //   timerButton.className = "timer-button";
+    //   timerButton.type = "button";
+    //   timerButton.textContent = "Iniciar descanso";
+    //   timerButton.addEventListener("click", () => startTimer(timerId, exercise.rest));
+    //   actionsRow.appendChild(timerButton);
+    // }
 
     card.appendChild(actionsRow);
 
-    const timerStatus = document.createElement("p");
-    timerStatus.className = "timer-status";
-    timerStatus.id = timerId;
-    card.appendChild(timerStatus);
+    // const timerStatus = document.createElement("p");
+    // timerStatus.className = "timer-status";
+    // timerStatus.id = timerId;
+    // card.appendChild(timerStatus);
 
     const history = document.createElement("div");
     history.className = "history";
