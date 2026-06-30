@@ -8,6 +8,10 @@ Aplicacao web simples para executar rotinas de alongamento e aquecimento.
 - Lista rotinas por categoria.
 - Executa uma sequencia com timer por exercicio.
 - Expande automaticamente exercicios `Left/Right`.
+- Executa exercicios por tempo ou por repeticoes.
+- Calcula repeticoes usando 3 segundos por repeticao.
+- Suporta series com descanso entre series.
+- Usa transicao de 10 segundos entre exercicios diferentes.
 - Avanca para o proximo passo ao terminar o tempo.
 - Toca um beep no fim da etapa e no countdown final.
 - Salva conclusoes no LocalStorage.

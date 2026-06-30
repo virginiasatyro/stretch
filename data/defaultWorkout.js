@@ -1,4 +1,4 @@
-window.DEFAULT_ROUTINES_VERSION = 2026062702;
+window.DEFAULT_ROUTINES_VERSION = 2026062901;
 window.DEFAULT_ROUTINES = [
   {
     id: "upper-body-warmup",
@@ -73,5 +73,97 @@ window.DEFAULT_ROUTINES = [
       { id: "forward-fold", name: "Forward Fold", duration: 45, repeat: "both" },
       { id: "deep-squat", name: "Deep Squat Hold", duration: 45, repeat: "both" }
     ]
+  },
+  {
+    id: "destravando-chutes-treino-1",
+    program: "Destravando os Chutes",
+    name: "Treino 1",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: [
+      {
+        description: "Maos na cintura, pernas levemente abertas, pes para fora, flexiona o joelho.",
+        sets: 3,
+        reps: 20,
+        rest: 30,
+        repeat: "both"
+      },
+      {
+        description: "Mao no quadril, pernas mais afastadas, pes levemente para fora na diagonal, desce ate onde conseguir.",
+        sets: 3,
+        reps: 10,
+        rest: 30,
+        repeat: "both"
+      },
+      {
+        description: "Pernas estendidas, abertas na media, inclinar tronco para a frente tentando levar as maos no chao, empurra quadril para a frente e a cabeca para tras.",
+        sets: 2,
+        reps: 10,
+        rest: 60,
+        repeat: "both"
+      },
+      {
+        description: "Pernas estendidas, abertas na media, pes levemente para fora na diagonal, desce com as duas maos em direcao ao pe.",
+        sets: 2,
+        reps: 10,
+        rest: 60,
+        repeat: "bothSides"
+      },
+      {
+        description: "Pernas estendidas, abertas na media, pes levemente para fora na diagonal, desce com uma mao em direcao ao pe do mesmo lado.",
+        sets: 2,
+        reps: 10,
+        rest: 60,
+        repeat: "bothSides"
+      }
+    ]
+  },
+  {
+    id: "destravando-chutes-treino-2",
+    program: "Destravando os Chutes",
+    name: "Treino 2",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: []
+  },
+  {
+    id: "destravando-chutes-treino-3",
+    program: "Destravando os Chutes",
+    name: "Treino 3",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: []
+  },
+  {
+    id: "destravando-chutes-treino-4",
+    program: "Destravando os Chutes",
+    name: "Treino 4",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: []
+  },
+  {
+    id: "destravando-chutes-treino-5",
+    program: "Destravando os Chutes",
+    name: "Treino 5",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: []
+  },
+  {
+    id: "destravando-chutes-treino-6",
+    program: "Destravando os Chutes",
+    name: "Treino 6",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: []
+  },
+  {
+    id: "destravando-chutes-treino-7",
+    program: "Destravando os Chutes",
+    name: "Treino 7",
+    icon: "DC",
+    color: "#237a8f",
+    exercises: []
   }
 ];

@@ -8,6 +8,7 @@
   --line: #dbe1d9;
   --accent: #2f7d68;
   --transition: #2f86a6;
+  --rest: #7d6845;
   --header: #202624;
   --danger: #a13d3d;
   --shadow: 0 12px 28px rgba(26, 34, 30, 0.08);
@@ -23,6 +24,7 @@ body.dark-theme {
   --line: #354039;
   --accent: #58b890;
   --transition: #63b8d4;
+  --rest: #d0b27c;
   --header: #0d0f0e;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
 }
@@ -141,6 +143,11 @@ h3 {
   color: #ffffff;
 }
 
+.primary-button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
 .ghost-button {
   background: var(--surface-muted);
 }
@@ -221,6 +228,16 @@ label span,
 .routine-grid {
   display: grid;
   gap: 12px;
+}
+
+.routine-program {
+  display: grid;
+  gap: 12px;
+}
+
+.routine-program h3 {
+  margin: 10px 0 0;
+  font-size: 1.1rem;
 }
 
 .settings-panel {
@@ -352,6 +369,10 @@ input[type="color"] {
   border-top-color: var(--transition);
 }
 
+.player-panel.is-rest {
+  border-top-color: var(--rest);
+}
+
 .player-routine {
   margin-bottom: 10px;
   color: var(--routine-color);
@@ -361,6 +382,10 @@ input[type="color"] {
 
 .player-panel.is-transition .player-routine {
   color: var(--transition);
+}
+
+.player-panel.is-rest .player-routine {
+  color: var(--rest);
 }
 
 .player-panel h2 {
@@ -384,6 +409,18 @@ input[type="color"] {
 .player-panel.is-transition .side-label {
   background: color-mix(in srgb, var(--transition) 18%, var(--surface-muted));
   color: var(--transition);
+}
+
+.player-panel.is-rest .side-label {
+  background: color-mix(in srgb, var(--rest) 18%, var(--surface-muted));
+  color: var(--rest);
+}
+
+.exercise-description {
+  width: min(720px, 100%);
+  margin: 0 auto 16px;
+  color: var(--muted);
+  font-size: 1rem;
 }
 
 .timer-display {
@@ -410,6 +447,10 @@ input[type="color"] {
 
 .player-panel.is-transition .progress-bar span {
   background: var(--transition);
+}
+
+.player-panel.is-rest .progress-bar span {
+  background: var(--rest);
 }
 
 .routine-progress {

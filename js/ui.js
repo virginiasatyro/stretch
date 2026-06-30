@@ -28,8 +28,29 @@ const UI = (() => {
   function renderRoutines(routines, actions) {
     const container = document.getElementById("routine-list");
     container.innerHTML = "";
+    const programs = groupRoutines(routines);
 
-    routines.forEach((routine) => {
+    programs.ungrouped.forEach((routine) => {
+      container.appendChild(renderRoutineCard(routine, actions));
+    });
+
+    programs.grouped.forEach(([programName, programRoutines]) => {
+      const section = document.createElement("section");
+      section.className = "routine-program";
+      section.innerHTML = `<h3>${escapeHtml(programName)}</h3>`;
+
+      const list = document.createElement("div");
+      list.className = "routine-grid";
+      programRoutines.forEach((routine) => {
+        list.appendChild(renderRoutineCard(routine, actions));
+      });
+
+      section.appendChild(list);
+      container.appendChild(section);
+    });
+  }
+
+  function renderRoutineCard(routine, actions) {
       const duration = Routines.getRoutineDuration(routine);
       const card = document.createElement("article");
       card.className = "routine-card";
@@ -38,13 +59,32 @@ const UI = (() => {
         <div class="routine-mark">${escapeHtml(routine.icon)}</div>
         <div>
           <h3>${escapeHtml(routine.name)}</h3>
-          <p>${routine.exercises.length} exercises &middot; ${Routines.formatDuration(duration)}</p>
+          <p>${Routines.getExerciseCount(routine)} exercises &middot; ${Routines.formatDuration(duration)}</p>
         </div>
-        <button class="primary-button" type="button">Start</button>
+        <button class="primary-button" type="button"${routine.exercises.length ? "" : " disabled"}>Start</button>
       `;
       card.querySelector("button").addEventListener("click", () => actions.startRoutine(routine.id));
-      container.appendChild(card);
+      return card;
+  }
+
+  function groupRoutines(routines) {
+    const ungrouped = [];
+    const groupedMap = new Map();
+
+    routines.forEach((routine) => {
+      if (!routine.program) {
+        ungrouped.push(routine);
+        return;
+      }
+
+      if (!groupedMap.has(routine.program)) groupedMap.set(routine.program, []);
+      groupedMap.get(routine.program).push(routine);
     });
+
+    return {
+      grouped: Array.from(groupedMap.entries()),
+      ungrouped
+    };
   }
 
   function renderSettings(settings, actions) {
@@ -141,12 +181,14 @@ const UI = (() => {
     }
 
     const isTransition = state.player.mode === "transition";
+    const isRest = step.kind === "rest";
     const segmentDuration = isTransition ? Routines.getTransitionDuration() : step.duration;
     const progress = segmentDuration > 0 ? ((segmentDuration - state.player.remaining) / segmentDuration) * 100 : 0;
     const totalProgress = steps.length > 1 ? (state.player.stepIndex / (steps.length - 1)) * 100 : 100;
     const next = steps[state.player.stepIndex + 1];
     const title = isTransition ? "Next Exercise" : step.name;
-    const sideLabel = isTransition ? "GET READY" : formatSide(step.side);
+    const sideLabel = isTransition ? "GET READY" : isRest ? "REST" : formatSide(step.side);
+    const detail = getStepDetail(step, isTransition);
     const nextLabel = isTransition && next
       ? `${escapeHtml(next.name)} &middot; ${formatSide(next.side)}`
       : next
@@ -158,10 +200,11 @@ const UI = (() => {
         <button class="ghost-button" type="button" data-action="backHome">Close</button>
         <span>${isTransition ? "Transition" : `Exercise ${state.player.stepIndex + 1} / ${steps.length}`}</span>
       </div>
-      <article class="player-panel${isTransition ? " is-transition" : ""}" style="--routine-color: ${routine.color}">
+      <article class="player-panel${isTransition ? " is-transition" : ""}${isRest ? " is-rest" : ""}" style="--routine-color: ${routine.color}">
         <div class="player-routine">${escapeHtml(routine.name)}</div>
         <h2>${escapeHtml(title)}</h2>
         <div class="side-label">${sideLabel}</div>
+        ${detail ? `<p class="exercise-description">${escapeHtml(detail)}</p>` : ""}
         <div class="timer-display">${Routines.formatClock(state.player.remaining)}</div>
         <div class="progress-bar" aria-label="Exercise progress"><span style="width: ${progress}%"></span></div>
         <div class="progress-bar routine-progress" aria-label="Routine progress"><span style="width: ${totalProgress}%"></span></div>
@@ -180,9 +223,21 @@ const UI = (() => {
   }
 
   function formatSide(side) {
+    if (side === "rest") return "REST";
     if (side === "left") return "LEFT";
     if (side === "right") return "RIGHT";
     return "BOTH";
+  }
+
+  function getStepDetail(step, isTransition) {
+    if (isTransition) return "";
+    if (step.kind === "rest") return `Set ${step.setIndex} complete. Next set starts after this rest.`;
+
+    const parts = [];
+    if (step.sets > 1) parts.push(`Set ${step.setIndex} of ${step.sets}`);
+    if (step.reps) parts.push(`${step.reps} reps`);
+    if (step.description || step.notes) parts.push(step.description || step.notes);
+    return parts.join(" - ");
   }
 
   function escapeHtml(value) {

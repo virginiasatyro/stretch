@@ -188,7 +188,7 @@ const App = (() => {
       return;
     }
 
-    if (steps[state.player.stepIndex].id === steps[nextIndex].id) {
+    if (steps[state.player.stepIndex].exerciseKey === steps[nextIndex].exerciseKey) {
       advanceToStep(nextIndex);
       return;
     }

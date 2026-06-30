@@ -1,5 +1,6 @@
 const Routines = (() => {
-  const transitionDuration = 5;
+  const transitionDuration = 10;
+  const secondsPerRep = 3;
 
   function createId(prefix = "id") {
     return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -12,15 +13,51 @@ const Routines = (() => {
   function expandSteps(routine) {
     if (!routine) return [];
 
-    return routine.exercises.flatMap((exercise) => {
-      if (exercise.repeat === "bothSides") {
-        return [
-          { ...exercise, side: "left", stepId: `${exercise.id}-left` },
-          { ...exercise, side: "right", stepId: `${exercise.id}-right` }
-        ];
+    return routine.exercises.flatMap((exercise, exerciseIndex) => {
+      const exerciseKey = exercise.id || `exercise-${exerciseIndex + 1}`;
+      const title = exercise.name || `Exercise ${exerciseIndex + 1}`;
+      const sets = Number(exercise.sets || 1);
+      const reps = Number(exercise.reps || exercise.repetitions || 0);
+      const duration = Number(exercise.duration || exercise.seconds || (reps * secondsPerRep));
+      const rest = Number(exercise.rest || 0);
+      const sides = exercise.repeat === "bothSides" ? ["left", "right"] : ["both"];
+      const steps = [];
+
+      for (let setIndex = 1; setIndex <= sets; setIndex += 1) {
+        sides.forEach((side) => {
+          steps.push({
+            ...exercise,
+            duration,
+            exerciseIndex,
+            exerciseKey,
+            kind: "work",
+            name: title,
+            reps,
+            setIndex,
+            sets,
+            side,
+            stepId: `${exerciseKey}-set-${setIndex}-${side}`
+          });
+        });
+
+        if (rest > 0 && setIndex < sets) {
+          steps.push({
+            duration: rest,
+            exerciseIndex,
+            exerciseKey,
+            kind: "rest",
+            name: "Rest",
+            description: exercise.description || exercise.notes || "",
+            reps: 0,
+            setIndex,
+            sets,
+            side: "rest",
+            stepId: `${exerciseKey}-set-${setIndex}-rest`
+          });
+        }
       }
 
-      return [{ ...exercise, side: "both", stepId: `${exercise.id}-both` }];
+      return steps;
     });
   }
 
@@ -29,7 +66,7 @@ const Routines = (() => {
     const exerciseDuration = steps.reduce((total, step) => total + Number(step.duration || 0), 0);
     const transitions = steps.reduce((total, step, index) => {
       const next = steps[index + 1];
-      return next && step.id !== next.id ? total + transitionDuration : total;
+      return next && step.exerciseKey !== next.exerciseKey ? total + transitionDuration : total;
     }, 0);
 
     return exerciseDuration + transitions;
@@ -37,6 +74,10 @@ const Routines = (() => {
 
   function getTransitionDuration() {
     return transitionDuration;
+  }
+
+  function getExerciseCount(routine) {
+    return routine?.exercises?.length || 0;
   }
 
   function getStats(history) {
@@ -105,6 +146,7 @@ const Routines = (() => {
     find,
     formatClock,
     formatDuration,
+    getExerciseCount,
     getRoutineDuration,
     getTransitionDuration,
     getStats
