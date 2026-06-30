@@ -7,6 +7,7 @@
   --muted: #667069;
   --line: #dbe1d9;
   --accent: #2f7d68;
+  --transition: #2f86a6;
   --header: #202624;
   --danger: #a13d3d;
   --shadow: 0 12px 28px rgba(26, 34, 30, 0.08);
@@ -21,6 +22,7 @@ body.dark-theme {
   --muted: #a7b4ad;
   --line: #354039;
   --accent: #58b890;
+  --transition: #63b8d4;
   --header: #0d0f0e;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
 }
@@ -145,9 +147,23 @@ h3 {
 
 .theme-toggle {
   flex: 0 0 auto;
+  width: 42px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
   border-color: rgba(255, 255, 255, 0.32);
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
+}
+
+.theme-icon {
+  width: 22px;
+  aspect-ratio: 1;
+  display: block;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #ffffff 0 50%, #111513 50% 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
 }
 
 .icon-button {
@@ -332,11 +348,19 @@ input[type="color"] {
   border-top: 8px solid var(--routine-color);
 }
 
+.player-panel.is-transition {
+  border-top-color: var(--transition);
+}
+
 .player-routine {
   margin-bottom: 10px;
   color: var(--routine-color);
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.player-panel.is-transition .player-routine {
+  color: var(--transition);
 }
 
 .player-panel h2 {
@@ -355,6 +379,11 @@ input[type="color"] {
   color: var(--routine-color);
   font-weight: 900;
   font-size: 1.15rem;
+}
+
+.player-panel.is-transition .side-label {
+  background: color-mix(in srgb, var(--transition) 18%, var(--surface-muted));
+  color: var(--transition);
 }
 
 .timer-display {
@@ -377,6 +406,10 @@ input[type="color"] {
   border-radius: inherit;
   background: var(--routine-color);
   transition: width 180ms linear;
+}
+
+.player-panel.is-transition .progress-bar span {
+  background: var(--transition);
 }
 
 .routine-progress {

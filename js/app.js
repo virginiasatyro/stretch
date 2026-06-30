@@ -12,6 +12,7 @@ const App = (() => {
     player: {
       routineId: null,
       stepIndex: 0,
+      mode: "exercise",
       remaining: 0,
       running: false,
       startedAt: null
@@ -127,6 +128,7 @@ const App = (() => {
     state.player = {
       routineId,
       stepIndex: 0,
+      mode: "exercise",
       remaining: firstStep.duration,
       running: state.settings.autoplay,
       startedAt: new Date().toISOString()
@@ -160,7 +162,7 @@ const App = (() => {
 
     if (state.player.remaining <= 0) {
       beep();
-      nextStep();
+      completeCurrentPlayerSegment();
       return;
     }
 
@@ -168,6 +170,32 @@ const App = (() => {
       beep(520, 0.04);
     }
 
+    render();
+  }
+
+  function completeCurrentPlayerSegment() {
+    if (state.player.mode === "transition") {
+      advanceToStep(state.player.stepIndex + 1);
+      return;
+    }
+
+    const routine = Routines.find(state.routines, state.player.routineId);
+    const steps = Routines.expandSteps(routine);
+    const nextIndex = state.player.stepIndex + 1;
+
+    if (nextIndex >= steps.length) {
+      completeRoutine(routine);
+      return;
+    }
+
+    if (steps[state.player.stepIndex].id === steps[nextIndex].id) {
+      advanceToStep(nextIndex);
+      return;
+    }
+
+    state.player.mode = "transition";
+    state.player.remaining = Routines.getTransitionDuration();
+    if (state.player.running) startTimer();
     render();
   }
 
@@ -181,10 +209,7 @@ const App = (() => {
       return;
     }
 
-    state.player.stepIndex = nextIndex;
-    state.player.remaining = steps[nextIndex].duration;
-    if (state.player.running) startTimer();
-    render();
+    advanceToStep(nextIndex);
   }
 
   function previousStep() {
@@ -192,8 +217,18 @@ const App = (() => {
     const steps = Routines.expandSteps(routine);
     const previousIndex = Math.max(0, state.player.stepIndex - 1);
 
-    state.player.stepIndex = previousIndex;
-    state.player.remaining = steps[previousIndex].duration;
+    advanceToStep(previousIndex);
+  }
+
+  function advanceToStep(stepIndex) {
+    const routine = Routines.find(state.routines, state.player.routineId);
+    const steps = Routines.expandSteps(routine);
+    const step = steps[stepIndex];
+    if (!step) return;
+
+    state.player.stepIndex = stepIndex;
+    state.player.mode = "exercise";
+    state.player.remaining = step.duration;
     if (state.player.running) startTimer();
     render();
   }

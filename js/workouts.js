@@ -1,4 +1,6 @@
 const Routines = (() => {
+  const transitionDuration = 5;
+
   function createId(prefix = "id") {
     return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
   }
@@ -23,7 +25,18 @@ const Routines = (() => {
   }
 
   function getRoutineDuration(routine) {
-    return expandSteps(routine).reduce((total, step) => total + Number(step.duration || 0), 0);
+    const steps = expandSteps(routine);
+    const exerciseDuration = steps.reduce((total, step) => total + Number(step.duration || 0), 0);
+    const transitions = steps.reduce((total, step, index) => {
+      const next = steps[index + 1];
+      return next && step.id !== next.id ? total + transitionDuration : total;
+    }, 0);
+
+    return exerciseDuration + transitions;
+  }
+
+  function getTransitionDuration() {
+    return transitionDuration;
   }
 
   function getStats(history) {
@@ -93,6 +106,7 @@ const Routines = (() => {
     formatClock,
     formatDuration,
     getRoutineDuration,
+    getTransitionDuration,
     getStats
   };
 })();

@@ -140,23 +140,32 @@ const UI = (() => {
       return;
     }
 
-    const progress = step.duration > 0 ? ((step.duration - state.player.remaining) / step.duration) * 100 : 0;
+    const isTransition = state.player.mode === "transition";
+    const segmentDuration = isTransition ? Routines.getTransitionDuration() : step.duration;
+    const progress = segmentDuration > 0 ? ((segmentDuration - state.player.remaining) / segmentDuration) * 100 : 0;
     const totalProgress = steps.length > 1 ? (state.player.stepIndex / (steps.length - 1)) * 100 : 100;
     const next = steps[state.player.stepIndex + 1];
+    const title = isTransition ? "Next Exercise" : step.name;
+    const sideLabel = isTransition ? "GET READY" : formatSide(step.side);
+    const nextLabel = isTransition && next
+      ? `${escapeHtml(next.name)} &middot; ${formatSide(next.side)}`
+      : next
+        ? `${escapeHtml(next.name)} &middot; ${formatSide(next.side)}`
+        : "Finish";
 
     container.innerHTML = `
       <div class="player-top">
         <button class="ghost-button" type="button" data-action="backHome">Close</button>
-        <span>Exercise ${state.player.stepIndex + 1} / ${steps.length}</span>
+        <span>${isTransition ? "Transition" : `Exercise ${state.player.stepIndex + 1} / ${steps.length}`}</span>
       </div>
-      <article class="player-panel" style="--routine-color: ${routine.color}">
+      <article class="player-panel${isTransition ? " is-transition" : ""}" style="--routine-color: ${routine.color}">
         <div class="player-routine">${escapeHtml(routine.name)}</div>
-        <h2>${escapeHtml(step.name)}</h2>
-        <div class="side-label">${formatSide(step.side)}</div>
+        <h2>${escapeHtml(title)}</h2>
+        <div class="side-label">${sideLabel}</div>
         <div class="timer-display">${Routines.formatClock(state.player.remaining)}</div>
         <div class="progress-bar" aria-label="Exercise progress"><span style="width: ${progress}%"></span></div>
         <div class="progress-bar routine-progress" aria-label="Routine progress"><span style="width: ${totalProgress}%"></span></div>
-        <p class="next-label">Next: ${next ? `${escapeHtml(next.name)} &middot; ${formatSide(next.side)}` : "Finish"}</p>
+        <p class="next-label">${isTransition ? "Up next" : "Next"}: ${nextLabel}</p>
         <div class="player-actions">
           <button class="ghost-button" type="button" data-action="previousStep">Previous</button>
           <button class="primary-button" type="button" data-action="togglePlayer">${state.player.running ? "Pause" : "Start"}</button>
